@@ -1,9 +1,39 @@
-
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub fn proceed_data(input: String) -> String {
-    format!("{} processed", input)
+extern "C" {
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: &str);
+}
+
+#[derive(Debug)]
+pub enum Error {
+    MagicMistake1,
+    OtherError2,
+}
+
+impl std::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Error::MagicMistake1 => write!(f, "MagicMistake1: Something magical went wrong!"),
+            Error::OtherError2 => write!(f, "OtherError2: Another kind of error occurred."),
+        }
+    }
+}
+
+fn proceed_data_internal(input: String) -> Result<String, Error> {
+    log(&format!("Rust received: {}", input));
+    match input.as_str() {
+        "InputTest1" => Err(Error::MagicMistake1),
+        "InputTest2" => Err(Error::OtherError2),
+        _ => Ok(format!("{} processed", input)),
+    }
+}
+
+#[wasm_bindgen]
+pub fn proceed_data(input: String) -> Result<String, JsValue> {
+    proceed_data_internal(input)
+        .map_err(|e| JsValue::from_str(&format!("Error occurred: {}", e)))
 }
 
 

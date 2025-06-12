@@ -93,14 +93,40 @@ http://localhost:8000
 ```rust
 use wasm_bindgen::prelude::*;
 
+#[derive(Debug)]
+pub enum Error {
+    MagicMistake1,
+    OtherError2,
+}
+
+impl std::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Error::MagicMistake1 => write!(f, "MagicMistake1: Something magical went wrong!"),
+            Error::OtherError2 => write!(f, "OtherError2: Another kind of error occurred."),
+        }
+    }
+}
+
+fn proceed_data_internal(input: String) -> Result<String, Error> {
+    match input.as_str() {
+        "InputTest1" => Err(Error::MagicMistake1),
+        "InputTest2" => Err(Error::OtherError2),
+        _ => Ok(format!("{} processed", input)),
+    }
+}
+
 #[wasm_bindgen]
-pub fn proceed_data(input: String) -> String {
-    format!("{} processed", input)
+pub fn proceed_data(input: String) -> Result<String, JsValue> {
+    proceed_data_internal(input)
+        .map_err(|e| JsValue::from_str(&format!("Error occurred: {}", e)))
 }
 ```
 
 - `#[wasm_bindgen]` - макрос, который делает функцию доступной из JavaScript
-- Функция принимает строку и возвращает строку с добавленным " processed"
+- Функция возвращает `Result<String, JsValue>` для обработки ошибок
+- При входных данных "InputTest1" и "InputTest2" генерируются специфические ошибки
+- Ошибки преобразуются в `JsValue` для передачи в JavaScript
 
 ### JavaScript интеграция (main.js)
 
@@ -109,8 +135,15 @@ pub fn proceed_data(input: String) -> String {
 const wasmImport = await import('./pkg/rust_wasm_example.js');
 await wasmImport.default();
 
-// Вызов функции из WASM
-const result = wasmImport.proceed_data(inputValue);
+// Вызов функции из WASM с обработкой ошибок
+try {
+    const result = wasmImport.proceed_data(inputValue);
+    // Обработка успешного результата
+    resultField.value = result;
+} catch (error) {
+    // Обработка ошибки
+    resultField.value = `Ошибка: ${error}`;
+}
 ```
 
 ### HTML форма (index.html)
@@ -118,6 +151,16 @@ const result = wasmImport.proceed_data(inputValue);
 - Поле ввода для данных
 - Кнопка "Proceed" для обработки
 - Поле результата для отображения
+
+## Тестирование обработки ошибок
+
+Проект включает демонстрацию обработки ошибок:
+
+- **Обычные данные**: любой текст → результат с " processed"
+- **InputTest1**: генерирует ошибку `MagicMistake1`
+- **InputTest2**: генерирует ошибку `OtherError2`
+
+Ошибки отображаются в поле результата с красной анимацией, а успешные результаты - с зеленой.
 
 ## Возможные проблемы и решения
 

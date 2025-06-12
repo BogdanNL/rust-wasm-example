@@ -67,6 +67,7 @@ function setupForm() {
             // Отображаем результат с анимацией
             resultField.value = result;
             resultField.classList.add('success-animation');
+            resultField.classList.remove('error-animation');
             
             // Убираем класс анимации через некоторое время
             setTimeout(() => {
@@ -77,7 +78,18 @@ function setupForm() {
             
         } catch (error) {
             console.error('Ошибка при обработке данных:', error);
-            alert('Произошла ошибка при обработке данных.');
+            
+            // Отображаем ошибку в поле результата
+            resultField.value = `Ошибка: ${error}`;
+            resultField.classList.add('error-animation');
+            resultField.classList.remove('success-animation');
+            
+            // Убираем класс анимации через некоторое время
+            setTimeout(() => {
+                resultField.classList.remove('error-animation');
+            }, 600);
+            
+            console.log(`Ошибка обработки: "${inputValue}" -> "${error}"`);
             
         } finally {
             // Убираем состояние загрузки
@@ -155,8 +167,9 @@ function addDemoFeatures() {
     const examples = [
         'Hello World',
         'Rust WASM',
-        'Тестовые данные',
-        'WebAssembly Demo'
+        'InputTest1',
+        'InputTest2',
+        'Тестовые данные'
     ];
     
     // Создаем кнопки с примерами
@@ -173,6 +186,12 @@ function addDemoFeatures() {
         btn.type = 'button';
         btn.textContent = example;
         btn.className = 'example-btn';
+        
+        // Добавляем специальный класс для примеров ошибок
+        if (example === 'InputTest1' || example === 'InputTest2') {
+            btn.classList.add('error-example');
+        }
+        
         btn.style.cssText = `
             margin: 2px 5px 2px 0;
             padding: 4px 8px;
@@ -190,13 +209,23 @@ function addDemoFeatures() {
         });
         
         btn.addEventListener('mouseenter', () => {
-            btn.style.background = 'var(--primary-color)';
-            btn.style.color = 'white';
+            if (btn.classList.contains('error-example')) {
+                btn.style.background = '#dc2626';
+                btn.style.color = 'white';
+            } else {
+                btn.style.background = 'var(--primary-color)';
+                btn.style.color = 'white';
+            }
         });
         
         btn.addEventListener('mouseleave', () => {
-            btn.style.background = 'var(--background)';
-            btn.style.color = 'var(--text-primary)';
+            if (btn.classList.contains('error-example')) {
+                btn.style.background = '#fee2e2';
+                btn.style.color = '#dc2626';
+            } else {
+                btn.style.background = 'var(--background)';
+                btn.style.color = 'var(--text-primary)';
+            }
         });
         
         examplesContainer.appendChild(btn);

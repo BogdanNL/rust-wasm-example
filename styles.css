@@ -309,3 +309,43 @@ footer {
     }
 }
 
+
+/* Анимации ошибок */
+.error-animation {
+    animation: errorPulse 0.6s ease-out;
+    border-color: #ef4444 !important;
+}
+
+@keyframes errorPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+/* Стили для ошибок */
+input.error-animation {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+/* Улучшенные стили для кнопок примеров */
+.example-btn.error-example {
+    background: #fee2e2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+.example-btn.error-example:hover {
+    background: #dc2626;
+    color: white;
+}
+
