@@ -195,3 +195,6 @@ try {
 - [wasm-bindgen Guide](https://rustwasm.github.io/wasm-bindgen/)
 - [MDN WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly)
 
+## Live demo
+
+Вы можете посмотреть живой пример как это работает тут: https://wasm.spasennikov.com/
