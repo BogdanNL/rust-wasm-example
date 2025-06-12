@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust WASM Example</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rust WASM Пример</h1>
+            <p>Демонстрация взаимодействия JavaScript с WebAssembly, скомпилированным из Rust</p>
+        </header>
+        
+        <main>
+            <div class="form-container">
+                <form id="wasm-form">
+                    <div class="input-group">
+                        <label for="input-field">Введите данные:</label>
+                        <input 
+                            type="text" 
+                            id="input-field" 
+                            name="input" 
+                            placeholder="Введите текст для обработки..."
+                            required
+                        >
+                    </div>
+                    
+                    <button type="submit" id="proceed-btn" class="proceed-btn">
+                        <span>Proceed</span>
+                        <div class="loading-spinner" id="loading-spinner"></div>
+                    </button>
+                    
+                    <div class="result-group">
+                        <label for="result-field">Результат:</label>
+                        <input 
+                            type="text" 
+                            id="result-field" 
+                            name="result" 
+                            placeholder="Результат появится здесь..."
+                            readonly
+                        >
+                    </div>
+                </form>
+            </div>
+            
+            <div class="info-panel">
+                <h3>Как это работает:</h3>
+                <ol>
+                    <li>Введите текст в поле ввода</li>
+                    <li>Нажмите кнопку "Proceed"</li>
+                    <li>JavaScript передает данные в WASM модуль</li>
+                    <li>Rust функция обрабатывает данные</li>
+                    <li>Результат возвращается и отображается</li>
+                </ol>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Создано с использованием Rust, WebAssembly и современных веб-технологий</p>
+        </footer>
+    </div>
+    
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+
