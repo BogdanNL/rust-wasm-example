@@ -1,3 +1,4 @@
+use sha2::{Digest, Sha256};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -22,11 +23,24 @@ impl std::fmt::Display for Error {
 }
 
 fn proceed_data_internal(input: String) -> Result<String, Error> {
-    log(&format!("Rust received: {}", input));
+    log(&format!("Rust input: {}", input));
     match input.as_str() {
         "InputTest1" => Err(Error::MagicMistake1),
         "InputTest2" => Err(Error::OtherError2),
-        _ => Ok(format!("{} processed", input)),
+        _ => {
+            // Вычисляем SHA-256 для всех прочих входов
+            let mut hasher = Sha256::new();
+            hasher.update(input.as_bytes());
+            let hash_bytes = hasher.finalize();
+
+            // Преобразуем байты в hex-строку
+            let hex_hash = hash_bytes
+                .iter()
+                .map(|b| format!("{:02x}", b))
+                .collect::<String>();
+            log(&format!("Rust output: {}", hex_hash));
+            Ok(hex_hash)
+        }
     }
 }
 

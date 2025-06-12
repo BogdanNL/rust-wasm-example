@@ -195,6 +195,13 @@ try {
 - [wasm-bindgen Guide](https://rustwasm.github.io/wasm-bindgen/)
 - [MDN WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly)
 
+
+## История
+
+- Изменили алгоритм формирования результата в `proceed_data_internal` для наглядности. Теперь вместо
+простого добавления "processed" к input'у, производятся вычисления sha256 хэша от input'а, который и
+становится результатом.
+
 ## Live demo
 
 Вы можете посмотреть живой пример как это работает тут: https://wasm.spasennikov.com/
